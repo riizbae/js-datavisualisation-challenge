@@ -30,15 +30,18 @@ function addChart() {
         type: 'line',
         data: {
             labels: year,
-            datasets: [{
-                label: country[0],
-                borderColor: 'red',
-                data: Math.round(getCrimesByCountry([country]))
-            }]
+            datasets: generateData()
         }
 
         // Configuration options go here
     });
+    function handleClick() {
+        chart.data.datasets.forEach(function (ds) {
+            ds.hidden = !ds.hidden;
+        });
+        chart.update();
+    }
+    handleClick();
 
 }
 
@@ -66,12 +69,16 @@ function getYear() {
     for (let i = 0; i < data[1].length; i++) {
         year.push(data[1][i]);
     }
+    year.splice(0, 2);
+
 }
 
 function getCountry() {
     data.forEach(element => {
         country.push(element[1]);
     })
+    country.splice(0, 2);
+
 }
 
 function getCrimesByCountry(country) {
@@ -79,25 +86,48 @@ function getCrimesByCountry(country) {
     data.forEach(element => {
         if (element.includes(country)) {
             for (i = 0; i < element.length; i++) {
+                element[i] = element[i].replace(/,/g, '.')
                 crimesByCountry.push(element[i]);
+
             }
         }
     })
-    crimesByCountry.splice(0, 2);
+    crimesByCountry.splice(0, 2)
     return crimesByCountry;
 }
 
+function generateData() {
+    let dataGenerated = [];
+    for (let i = 0; i < country.length; i++) {
+
+        let dataToGenerate = { label: country[i], borderColor: getRandomColor(), data: getCrimesByCountry(country[i]) };
+        dataGenerated.push(dataToGenerate);
+        console.log(dataGenerated)
+
+    }
+
+    return dataGenerated;
+}
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+
 getYear();
 getCountry();
-year.splice(0, 2);
-country.splice(0, 2);
 
 
-getCrimesByCountry(country[0]).forEach(element => {
+/*getCrimesByCountry(country[0]).forEach(element => {
     element = parseInt(element);
     Math.round(element);
     console.log(element)
-})
+})*/
 console.log(year);
 console.log(country);
 console.log(data);
