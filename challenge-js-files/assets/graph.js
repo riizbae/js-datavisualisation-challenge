@@ -44,8 +44,7 @@ class Charts {
         function handleClick() {
 
             for (let i = numberOfCountryByDefault; i < chart.data.datasets.length; i++) {
-                    chart.data.datasets[i].hidden = !chart.data.datasets[i].hidden
-                    console.log((chart.data.datasets[i]))
+                chart.data.datasets[i].hidden = !chart.data.datasets[i].hidden
             }
 
             chart.update();
@@ -137,15 +136,19 @@ class Charts {
 
         handleClick();
 
-        console.log(year);
-        console.log(country);
-        console.log(data);
-        console.log(chart.data);
-        console.log(getCrimesByCountry(country[0]));
+   
 
     }
 }
 
+
+
 let chartByCrimes = new Charts('mw-content-text', 'table1', 'chartByCrimes', 'line', 4);
 let chartHomicides = new Charts('mw-content-text', 'table2', 'chartByHomicides', 'bar', 3);
+
+
+
+
+
+
 
