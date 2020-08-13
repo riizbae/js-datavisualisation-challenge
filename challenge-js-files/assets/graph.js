@@ -1,144 +1,151 @@
-function addChart() {
+class Charts {
+    constructor(targetList, nextTarget, id, typeOfChar, numberOfCountryByDefault) {
 
-    const targetList = document.getElementById('mw-content-text')
-    const nextTarget = document.getElementById('table1');
-    const mycanvas = document.createElement('canvas');
-    targetList.insertBefore(mycanvas, nextTarget);
-    mycanvas.setAttribute("id", "myChart");
-    mycanvas.style.width = "600px"
-    mycanvas.style.height = "600px"
+        this.id = id;
+        this.targetList = document.getElementById(targetList)
+        this.nextTarget = document.getElementById(nextTarget);
+        const mycanvas = document.createElement('canvas');
+        this.targetList.insertBefore(mycanvas, this.nextTarget);
+        mycanvas.setAttribute('id', this.id);
+        mycanvas.style.width = "600px"
+        mycanvas.style.height = "600px"
+
+        let data = table_to_array(nextTarget);
+        let year = [];
+        let country = [];
+        let ctx = document.getElementById(this.id).getContext('2d');
+
+        getYear();
+        getCountry();
 
 
-    let ctx = document.getElementById('myChart').getContext('2d');
-    let chart = new Chart(ctx, {
-        // The type of chart we want to create
+        let chart = new Chart(ctx, {
 
+            //     labels: year,
+            //     datasets: [{
+            //         label: 'Belgique',
+            //         borderColor: 'rgb(255, 99, 132)',
+            //         data: [0, 10, 5, 2, 20, 30, 45, 30]
+            //     }, {
+            //         label: 'Hongrie',
+            //         borderColor: 'green',
+            //         data: [0, 15, 5, 2, 20, 30, 45,10]
+            //     }]
+            // },
 
-        // The data for our dataset
-        // data: {
-        //     labels: year,
-        //     datasets: [{
-        //         label: 'Belgique',
-        //         borderColor: 'rgb(255, 99, 132)',
-        //         data: [0, 10, 5, 2, 20, 30, 45, 30]
-        //     }, {
-        //         label: 'Hongrie',
-        //         borderColor: 'green',
-        //         data: [0, 15, 5, 2, 20, 30, 45,10]
-        //     }]
-        // },
-        type: 'line',
-        data: {
-            labels: year,
-            datasets: generateData()
-        }
+            type: typeOfChar,
+            data: {
+                labels: year,
+                datasets: generateData()
+            }
 
-        // Configuration options go here
-    });
-    function handleClick() {
-        chart.data.datasets.forEach(function (ds) {
-            ds.hidden = !ds.hidden;
         });
-        chart.update();
-    }
-    handleClick();
 
-}
+        function handleClick() {
 
-document.body.onload = addChart;
+            for (let i = numberOfCountryByDefault; i < chart.data.datasets.length; i++) {
+                    chart.data.datasets[i].hidden = !chart.data.datasets[i].hidden
+                    console.log((chart.data.datasets[i]))
+            }
 
-let data = table_to_array('table1');
-let year = [];
-let country = [];
-
-function table_to_array(table1) {
-    myData = document.getElementById(table1).rows
-    my_array = []
-    for (let i = 0; i < myData.length; i++) {
-        el = myData[i].children
-        my_el = []
-        for (let j = 0; j < el.length; j++) {
-            my_el.push(el[j].innerText);
+            chart.update();
         }
-        my_array.push(my_el);
-    }
-    return my_array;
-}
 
-function getYear() {
-    for (let i = 0; i < data[1].length; i++) {
-        year.push(data[1][i]);
-    }
-    year.splice(0, 2);
+        function table_to_array(table1) {
+            let myData = document.getElementById(table1).rows
+            let my_array = []
+            for (let i = 0; i < myData.length; i++) {
+                let el = myData[i].children
+                let my_el = []
+                for (let j = 0; j < el.length; j++) {
+                    my_el.push(el[j].innerText);
+                }
+                my_array.push(my_el);
+            }
+            return my_array;
+        }
 
-}
+        function getYear() {
+            if (id === 'chartByCrimes') {
+                for (let i = 0; i < data[1].length; i++) {
+                    year.push(data[1][i]);
+                }
+                year.splice(0, 2);
+            } else {
+                for (let i = 0; i < data[1].length; i++) {
+                    year.push(data[0][i]);
+                }
+                year.splice(0, 2);
+            }
 
-function getCountry() {
-    data.forEach(element => {
-        country.push(element[1]);
-    })
-    country.splice(0, 2);
+        }
 
-}
+        function getCountry() {
+            data.forEach(element => {
+                country.push(element[1]);
+            })
+            country.splice(0, 2);
 
-function getCrimesByCountry(country) {
-    let crimesByCountry = [];
-    data.forEach(element => {
-        if (element.includes(country)) {
-            for (i = 0; i < element.length; i++) {
-                element[i] = element[i].replace(/,/g, '.')
-                crimesByCountry.push(element[i]);
+        }
+
+        function getCrimesByCountry(country) {
+            let crimesByCountry = [];
+            data.forEach(element => {
+                if (element.includes(country)) {
+                    for (let i = 0; i < element.length; i++) {
+                        element[i] = element[i].replace(/,/g, '.')
+                        crimesByCountry.push(element[i]);
+
+                    }
+                }
+            })
+            crimesByCountry.splice(0, 2)
+            return crimesByCountry;
+        }
+
+        function generateData() {
+            let dataGenerated = [];
+            for (let i = 0; i < country.length; i++) {
+
+                let dataToGenerate = { label: country[i], borderColor: getRandomBorderColor(), backgroundColor: getRandomBackgroundColor(), data: getCrimesByCountry(country[i]) };
+                dataGenerated.push(dataToGenerate);
 
             }
+
+            return dataGenerated;
         }
-    })
-    crimesByCountry.splice(0, 2)
-    return crimesByCountry;
-}
 
-function generateData() {
-    let dataGenerated = [];
-    for (let i = 0; i < country.length; i++) {
+        function getRandomBorderColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
 
-        let dataToGenerate = { label: country[i], borderColor: getRandomColor(), data: getCrimesByCountry(country[i]) };
-        dataGenerated.push(dataToGenerate);
-        console.log(dataGenerated)
+        function getRandomBackgroundColor() {
+            if (id === 'chartByHomicides') {
+                var letters = '0123456789ABCDEF';
+                var color = '#';
+                for (let i = 0; i < 6; i++) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+            }
+            return color;
+        }
+
+        handleClick();
+
+        console.log(year);
+        console.log(country);
+        console.log(data);
+        console.log(chart.data);
+        console.log(getCrimesByCountry(country[0]));
 
     }
-
-    return dataGenerated;
 }
 
-function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-}
-
-
-getYear();
-getCountry();
-
-
-/*getCrimesByCountry(country[0]).forEach(element => {
-    element = parseInt(element);
-    Math.round(element);
-    console.log(element)
-})*/
-console.log(year);
-console.log(country);
-console.log(data);
-
-console.log(getCrimesByCountry(country[0]));
-
-
-// creation function 
-
-/*function count(){
-    if ()
-
-}*/
+let chartByCrimes = new Charts('mw-content-text', 'table1', 'chartByCrimes', 'line', 4);
+let chartHomicides = new Charts('mw-content-text', 'table2', 'chartByHomicides', 'bar', 3);
 
