@@ -4,7 +4,7 @@ const mycanvas = document.createElement('canvas');
 this.targetList.insertBefore(mycanvas, nextTarget);
 mycanvas.setAttribute('id', 'dynamicGraph');
 mycanvas.style.width = "600px"
-mycanvas.style.height = "600px"
+mycanvas.style.height = "450px"
 let ctx = document.getElementById('dynamicGraph').getContext('2d');
 
 window.onload = function () {
@@ -23,7 +23,8 @@ window.onload = function () {
                 labels: label,
                 datasets: [{
                     label: 'Dynamic Graph',
-                    borderColor: 'rgb(64,224,208)',
+                    borderColor: '#92A8D1',
+                    backgroundColor:'#92A8D1',
                     data: dataPoints
                 }]
             },

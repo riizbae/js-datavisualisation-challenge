@@ -8,7 +8,7 @@ class Charts {
         this.targetList.insertBefore(mycanvas, this.nextTarget);
         mycanvas.setAttribute('id', this.id);
         mycanvas.style.width = "600px"
-        mycanvas.style.height = "600px"
+        mycanvas.style.height = "450px"
 
         let data = table_to_array(nextTarget);
         let year = [];
@@ -36,7 +36,7 @@ class Charts {
             type: typeOfChar,
             data: {
                 labels: year,
-                datasets: generateData()
+                datasets: generateData(),
             }
 
         });
