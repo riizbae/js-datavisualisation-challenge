@@ -25,6 +25,8 @@ window.onload = function () {
                     label: 'Dynamic Graph',
                     borderColor: '#92A8D1',
                     backgroundColor:'#92A8D1',
+                    tension: 0,
+                    fill: false,
                     data: dataPoints
                 }]
             },
