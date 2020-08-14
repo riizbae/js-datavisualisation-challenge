@@ -4,16 +4,17 @@ const mycanvas = document.createElement('canvas');
 this.targetList.insertBefore(mycanvas, nextTarget);
 mycanvas.setAttribute('id', 'dynamicGraph');
 mycanvas.style.width = "600px"
-mycanvas.style.height = "450px"
+mycanvas.style.height = "250px"
 let ctx = document.getElementById('dynamicGraph').getContext('2d');
 
 window.onload = function () {
-    var dataPoints = [];
-    var chart;
-    let label = ["1","2","3","4","5","6","7","8","9","10"]; 
+    let dataPoints = [];
+    let chart;
+    let label = []; 
     $.getJSON("https://canvasjs.com/services/data/datapoints.php?xstart=1&ystart=10&length=10&type=json", function (data) {
         $.each(data, function (key, value) {
             dataPoints.push({ x: value[0], y: parseInt(value[1]) });
+            label.push(value[0])
         });
         chart = new Chart(ctx, {
             type: 'line',
@@ -44,7 +45,6 @@ window.onload = function () {
                 });
                 label.push(value[0]);
             });
-            console.log(dataPoints)
             chart.update();
             setTimeout(function () { updateChart() }, 1000);
         });
